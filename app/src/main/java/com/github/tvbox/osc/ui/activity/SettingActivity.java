@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.ui.activity;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
-import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.ui.adapter.SettingPageAdapter;
 import com.github.tvbox.osc.ui.adapter.SettingSortAdapter;
 import com.github.tvbox.osc.ui.fragment.ModelSettingFragment;
@@ -24,9 +24,6 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +112,7 @@ public class SettingActivity extends BaseActivity {
         if (homeSourceSort == null)
             homeSourceSort = "";
         List<String> sortList = new ArrayList<>();
-        sortList.add("站点数据源");
+        sortList.add("数据源");
         sortList.add("设置其他");
         sortAdapter.setNewData(sortList);
         initViewPager();
@@ -191,7 +188,13 @@ public class SettingActivity extends BaseActivity {
                 !currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) ||
                 !homeSourceSort.equals(newHomeSourceSort)) {
             AppManager.getInstance().finishAllActivity();
-            jumpActivity(HomeActivity.class);
+            if (currentApi.equals(Hawk.get(HawkConfig.API_URL, ""))) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("useCache", true);
+                jumpActivity(HomeActivity.class, bundle);
+            } else {
+                jumpActivity(HomeActivity.class);
+            }
         } else {
             super.onBackPressed();
         }
