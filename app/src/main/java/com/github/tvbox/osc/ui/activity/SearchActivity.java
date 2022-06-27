@@ -158,7 +158,7 @@ public class SearchActivity extends BaseActivity {
                         loadRec(text);
                     }
                 } else if (pos == 0) {
-                    RemoteDialog remoteDialog = new RemoteDialog().build(mContext);
+                    RemoteDialog remoteDialog = new RemoteDialog(mContext);
                     remoteDialog.show();
                 }
             }
@@ -298,7 +298,7 @@ public class SearchActivity extends BaseActivity {
 
         ArrayList<String> siteKey = new ArrayList<>();
         for (SourceBean bean : searchRequestList) {
-            if (!bean.isActive() || bean.isAddition()) {
+            if (!bean.isActive()) {
                 continue;
             }
             siteKey.add(bean.getKey());
